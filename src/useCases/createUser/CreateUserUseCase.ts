@@ -6,7 +6,7 @@ import { ICreateUserRequestDTO } from "./CreateUserDTO";
 class CreateUserUseCase {
 	constructor(
 		private userRepository: IuserRepository,
-		private emailProvider: EmailProvider
+		// private emailProvider: EmailProvider
 
 	) { }
 	async execute(data: ICreateUserRequestDTO): Promise<Object> {
@@ -17,17 +17,17 @@ class CreateUserUseCase {
 		// }
 		const user = new User(data);
 
-		await this.emailProvider.sendEmail(
-			{
-				to: {
-					email: data.email
-				},
-				from: {
-					email: 'josuerufino210@gmail.com'
-				},
-				subject: 'Bem vindo ao sistema',
-				body: `<button> <a href= 'http://localhost:3333/update/${data.email}'>Verificar</a> </button>`
-			})
+		// await this.emailProvider.sendEmail(
+		// 	{
+		// 		to: {
+		// 			email: data.email
+		// 		},
+		// 		from: {
+		// 			email: 'josuerufino210@gmail.com'
+		// 		},
+		// 		subject: 'Bem vindo ao sistema',
+		// 		body: `<button> <a href= 'http://localhost:3333/update/${data.email}'>Verificar</a> </button>`
+		// 	})
 		return await this.userRepository.save(user)
 	}
 
@@ -37,9 +37,15 @@ class CreateUserUseCase {
 
 	}
 
-	async updateStatus(data: ICreateUserRequestDTO): Promise<Object> {
+	async updateStatus(email: string): Promise<Object> {
 
-		return await this.userRepository.updateStatus(data.email)
+		return await this.userRepository.updateStatus(email)
+
+	}
+
+	async login(email: string, password: string): Promise<Object> {
+
+		return await this.userRepository.login(email, password)
 
 	}
 }

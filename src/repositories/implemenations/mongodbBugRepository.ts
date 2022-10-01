@@ -5,12 +5,12 @@ import Bugs from "../../models/Bug";
 class MongodbBugRepository implements IBugRepository {
 
  async findAll(): Promise<Object> {
-  const user = await Bugs.find().populate("technologyId");
+  const user = await Bugs.find().populate(["technologyId"]);
   return user;
  };
 
- async save(user: Bug): Promise<Bug> {
-  const newUser = await Bugs.create(user);
+ async save(bug: Bug): Promise<Bug> {
+  const newUser = await Bugs.create(bug);
   return newUser;
  };
 

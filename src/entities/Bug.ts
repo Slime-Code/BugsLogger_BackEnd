@@ -1,11 +1,11 @@
 
 interface IBug {
-	title?: string,
-	description?: string,
-	solution?: string,
-	link?: Array<string>,
-	technologyId?: string,
-	userId?: string
+	title: string,
+	description: string,
+	solution: string,
+	link: Array<string>,
+	technologyId: string,
+	userId: string
 }
 
 class Bug {

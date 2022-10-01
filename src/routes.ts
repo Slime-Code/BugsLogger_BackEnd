@@ -4,23 +4,29 @@ import { createUserController } from './useCases/createUser';
 import { createCategoryController } from './useCases/createCategory';
 import { createBugController } from './useCases/createBug';
 import { createTechnologyController } from './useCases/createTechnology';
+import { authMiddleware } from './middleware/authMiddleware'
 
 const router = Router();
+
 //User
 router.post("/", (req, res) => {
  return createUserController.create(req, res)
+})
+
+router.post("/login", (req, res) => {
+ return createUserController.login(req, res)
 })
 
 router.get("/update/:email", (req, res) => {
  return createUserController.findUsersAndUpdateStatus(req, res)
 })
 
-router.get("/home", (req, res) => {
+router.get("/find/users", authMiddleware, (req, res) => {
  return createUserController.findUsers(req, res)
 })
 
 //Bugs
-router.post("/create/bug", (req, res) => {
+router.post("/create/bug", authMiddleware, (req, res) => {
  return createBugController.create(req, res)
 })
 router.get("/find/bug", (req, res) => {

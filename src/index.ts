@@ -6,6 +6,7 @@ const cors = require("cors");
 const app = express();
 
 import router from './routes'
+import logger from './config/logger';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -14,9 +15,9 @@ app.use(cors());
 app.use(router)
 
 
-mongoose.connect('mongodb+srv://JulioDala:slimecode@cluster0.dore1el.mongodb.net/?retryWrites=true&w=majority');
+mongoose.connect('mongodb://localhost:27017/bglog');
 const db = mongoose.connection;
-db.on("error", (error) => console.log(error));
-db.once("open", () => console.log('connect to the database'));
+db.on("error", (error) => logger.error(error));
+db.once("open", () => logger.info('connect to the database'));
 
-app.listen(3333, () => console.log("Server running on port 3333..."))
+app.listen(3333, () => logger.info("Server running on port 3333..."))
