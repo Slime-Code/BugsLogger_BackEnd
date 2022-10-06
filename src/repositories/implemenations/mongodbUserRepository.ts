@@ -42,7 +42,7 @@ class MongodbUserRepository implements IuserRepository {
 		if (selectUser && selectUser.status !== "confirmated") {
 			return { status: 2, error: "Error! User not Found. Try again." }
 		} else {
-			const token = jwt.sign(selectUser.toJSON(), "slimecode")
+			const token = jwt.sign(selectUser.toJSON(), `${process.env.SECRET_KEY}`)
 			return { status: 1, token: token };
 		}
 	};

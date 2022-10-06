@@ -1,0 +1,16 @@
+{
+  "App": {
+    "port": 3333,
+    "database": {
+      "mongoUrl": "mongodb://localhost:27017/bglog"
+    },
+    "auth": {
+      "key": "slimecode",
+      "tokenExpiresIn": "20000000"
+    },
+    "logger": {
+      "enabled": true,
+      "level": "info"
+    }
+  }
+}
