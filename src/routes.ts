@@ -10,6 +10,10 @@ const router = Router();
 
 //User
 router.post("/", (req, res) => {
+ return createUserController.findUsers(req, res)
+})
+
+router.post("/create", (req, res) => {
  return createUserController.create(req, res)
 })
 

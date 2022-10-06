@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 app.use(router)
 
-mongoose.connect(`${process.env.MONGO_URL}`);
+mongoose.connect(`${process.env.MONGODB_URL}`);
 const db = mongoose.connection;
 db.on("error", (error) => logger.error(error));
 db.once("open", () => logger.info('connect to the database'));
