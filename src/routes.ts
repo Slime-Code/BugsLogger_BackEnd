@@ -9,7 +9,7 @@ import { authMiddleware } from './middleware/authMiddleware'
 const router = Router();
 
 //User
-router.post("/", (req, res) => {
+router.get("/", (req, res) => {
  return createUserController.findUsers(req, res)
 })
 
