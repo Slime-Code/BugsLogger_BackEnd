@@ -13,6 +13,9 @@ class MongodbUserRepository implements IuserRepository {
 
 	async updateStatus(email: string): Promise<String> {
 		const newUser = await Users.findOneAndUpdate({ email: email }, { status: 'confirmated' }, { new: true });
+		if (!newUser) {
+			'User not found'
+		}
 		return 'User updated with sucess!';
 	};
 

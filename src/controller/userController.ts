@@ -80,7 +80,7 @@ export default class userController {
 		}
 		catch (err) {
 			logger.error(err)
-			return res.status(400).json({
+			return res.status(409).json({
 				message: err || 'Unexpected error'
 			})
 		}

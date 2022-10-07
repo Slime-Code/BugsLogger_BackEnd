@@ -1,0 +1,875 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0",
+    "title": "Bugs Logger",
+    "description": "Bugs Logger API",
+    "termsOfService": "http://api_url/terms/",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://bugslogger.herokuapp.com/",
+      "description": "Production Server"
+    },
+    {
+      "url": "http://localhost:5050/",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/create": {
+      "post": {
+        "description": "Create a new User",
+        "operationId": "createUser",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "New User created with sucess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserCreatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Invalid parameters",
+                  "code": "400",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Conflict",
+                  "code": "409",
+                  "error": "Conflict"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "description": "Authenticate the user on the API generating a JWT token",
+        "operationId": "authenticateUser",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAuth"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The user has been authenticate and the JWT returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticatedUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "User unauthorized",
+                  "code": "401",
+                  "error": "Unauthorized"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/:email": {
+      "get": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "description": "Get the profile of the token's owner",
+        "operationId": "getUserProfile",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "description": "Email of user that needs to be updated",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "User not found",
+                  "code": "404",
+                  "error": "Not Found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/find/users": {
+      "get": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "description": "Get the list of users",
+        "operationId": "findUsers",
+        "responses": {
+          "200": {
+            "description": "The list of forecast has been returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindUsers"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create/bug": {
+      "post": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "description": "Create a new Bug belonging to the authenticated user",
+        "operationId": "createBug",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Bug"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The Bug has been created!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BugCreatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error validating the bug data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error validating bug data",
+                  "code": "400",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/find/bug": {
+      "get": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "description": "Get the list of bugs",
+        "operationId": "findBugs",
+        "responses": {
+          "200": {
+            "description": "The list of Bugs has been returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindBug"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create/category": {
+      "post": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "description": "Create a new Category belonging to the authenticated user",
+        "operationId": "createCategory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Category"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The Category has been created!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryCreatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error validating the Category data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error validating Category data",
+                  "code": "400",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/find/category": {
+      "get": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "description": "Get the list of categories",
+        "operationId": "findcategories",
+        "responses": {
+          "200": {
+            "description": "The list of categories has been returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindCategory"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create/technology": {
+      "post": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "description": "Create a new Technology belonging to the authenticated user",
+        "operationId": "createTechnology",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Technology"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The Technology has been created!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/technologyCreatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error validating the Technology data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error validating Technology data",
+                  "code": "400",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/find/technology": {
+      "get": {
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "description": "Get the list of technologies",
+        "operationId": "findtechnologies",
+        "responses": {
+          "200": {
+            "description": "The list of technologies has been returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindTechnology"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "apiKey": {
+        "type": "apiKey",
+        "name": "authorization-token",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "jwtToken": {
+        "type": "string",
+        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzE3NWNkNjY2ZWZjNDBiNmNhNjljNjEiLCJuYW1lIjoiSsO6bGlvIERhbGEiLCJlbWFpbCI6Imp1bGlvZGFsYUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCQxNVRhakgwTTlyQ1FBZnZxQ3NOQlYubnZKNm5QTWRONXhZMDJiQ2F2OTRTSEswRGxoMVNocSIsInN0YXR1cyI6ImNvbmZpcm1hdGVkIiwidHlwZVVzZXJJZCI6MSwiY3JlYXRlZEF0IjoiMjAyMi0wOS0wNlQxNDo0NDozOC4xNTNaIiwidXBkYXRlZEF0IjoiMjAyMi0wOS0wNlQxNDo0NjowMC43NzVaIiwiX192IjowLCJpYXQiOjE2NjUxNTM5MTZ9.-oUJOPCheZfkrfImOnx9dw3OBnu63XvPzmqq_uawe7E"
+      },
+      "name": {
+        "type": "string",
+        "example": "John Doe"
+      },
+      "status": {
+        "type": "number",
+        "example": 1
+      },
+      "email": {
+        "type": "string",
+        "example": "john@mail.com"
+      },
+      "password": {
+        "type": "string",
+        "example": "12345#@$$%"
+      },
+      "title": {
+        "type": "string",
+        "example": "Erro de porta no Xammp"
+      },
+      "description": {
+        "type": "string",
+        "example": "Este erro se deu porque a porta padrão estava sendo utilizada por outra App"
+      },
+      "link": {
+        "type": "array",
+        "example": [
+          "https://www.facebook.com",
+          "https://mongoosejs.com/docs/schematypes.html"
+        ]
+      },
+      "technologyId": {
+        "type": "string",
+        "example": "63403e77ee95ac6fdec0375b"
+      },
+      "solution": {
+        "type": "string",
+        "example": "abrir o App gerenciador de tarefas e encerrar a execução do xammp"
+      },
+      "id": {
+        "type": "string",
+        "example": "63175cd666efc40b6ca69c61"
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/name"
+          },
+          "email": {
+            "$ref": "#/components/schemas/email"
+          },
+          "password": {
+            "$ref": "#/components/schemas/password"
+          }
+        }
+      },
+      "Bug": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "$ref": "#/components/schemas/title"
+          },
+          "description": {
+            "$ref": "#/components/schemas/description"
+          },
+          "solution": {
+            "$ref": "#/components/schemas/solution"
+          },
+          "link": {
+            "$ref": "#/components/schemas/link"
+          },
+          "technologyId": {
+            "$ref": "#/components/schemas/technologyId"
+          },
+          "userId": {
+            "$ref": "#/components/schemas/id"
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "solution",
+          "link",
+          "technologyId",
+          "userId"
+        ]
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Back-End"
+          }
+        }
+      },
+      "Technology": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Node JS"
+          },
+          "categoryId": {
+            "type": "string",
+            "example": "63403e77ee95ac6fdec0375b"
+          }
+        }
+      },
+      "FindUsers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "$ref": "#/components/schemas/id"
+            },
+            "name": {
+              "$ref": "#/components/schemas/name"
+            },
+            "email": {
+              "$ref": "#/components/schemas/email"
+            },
+            "password": {
+              "type": "string",
+              "example": "$2a$10$15TajH0M9rCQAfvqCsNBV.nvJ6nPMdN5xY02bCav94SHK0Dlh1Shq"
+            },
+            "status": {
+              "type": "string",
+              "example": "waiting"
+            },
+            "createdAt": {
+              "type": "string",
+              "example": "2022-10-06T14:49:43.400Z"
+            },
+            "updatedAt": {
+              "type": "string",
+              "example": "2022-10-06T14:49:43.400Z"
+            },
+            "__v": {
+              "type": "number",
+              "example": 0
+            }
+          }
+        }
+      },
+      "FindBug": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "$ref": "#/components/schemas/id"
+            },
+            "title": {
+              "$ref": "#/components/schemas/title"
+            },
+            "description": {
+              "$ref": "#/components/schemas/description"
+            },
+            "solution": {
+              "$ref": "#/components/schemas/solution"
+            },
+            "link": {
+              "$ref": "#/components/schemas/link"
+            },
+            "technologyId": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "$ref": "#/components/schemas/id"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Node JS"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "example": "2022-10-06T14:49:43.400Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "example": "2022-10-06T14:49:43.400Z"
+                },
+                "__v": {
+                  "type": "number",
+                  "example": 0
+                }
+              }
+            },
+            "createdAt": {
+              "type": "string",
+              "example": "2022-10-06T14:49:43.400Z"
+            },
+            "updatedAt": {
+              "type": "string",
+              "example": "2022-10-06T14:49:43.400Z"
+            },
+            "__v": {
+              "type": "number",
+              "example": 0
+            }
+          }
+        }
+      },
+      "FindCategory": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "$ref": "#/components/schemas/id"
+            },
+            "name": {
+              "type": "string",
+              "example": "Back-End"
+            },
+            "createdAt": {
+              "type": "string",
+              "example": "2022-10-06T14:49:43.400Z"
+            },
+            "updatedAt": {
+              "type": "string",
+              "example": "2022-10-06T14:49:43.400Z"
+            },
+            "__v": {
+              "type": "number",
+              "example": 0
+            }
+          }
+        }
+      },
+      "FindTechnology": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "$ref": "#/components/schemas/id"
+            },
+            "name": {
+              "type": "string",
+              "example": "Back-End"
+            },
+            "categoryId": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "$ref": "#/components/schemas/id"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Back-End"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "example": "2022-10-06T14:49:43.400Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "example": "2022-10-06T14:49:43.400Z"
+                },
+                "__v": {
+                  "type": "number",
+                  "example": 0
+                }
+              }
+            },
+            "createdAt": {
+              "type": "string",
+              "example": "2022-10-06T14:49:43.400Z"
+            },
+            "updatedAt": {
+              "type": "string",
+              "example": "2022-10-06T14:49:43.400Z"
+            },
+            "__v": {
+              "type": "number",
+              "example": 0
+            }
+          }
+        }
+      },
+      "UserAuth": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "$ref": "#/components/schemas/email"
+          },
+          "password": {
+            "$ref": "#/components/schemas/password"
+          }
+        }
+      },
+      "UserCreatedResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "$ref": "#/components/schemas/name"
+              },
+              "email": {
+                "$ref": "#/components/schemas/email"
+              },
+              "password": {
+                "$ref": "#/components/schemas/password"
+              },
+              "id": {
+                "$ref": "#/components/schemas/id"
+              }
+            }
+          }
+        }
+      },
+      "AuthenticatedUserResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "$ref": "#/components/schemas/status"
+              },
+              "token": {
+                "$ref": "#/components/schemas/jwtToken"
+              }
+            }
+          }
+        }
+      },
+      "UserProfileResponse": {
+        "type": "string",
+        "example": "User updated with sucess!"
+      },
+      "BugCreatedResponse": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "$ref": "#/components/schemas/title"
+          },
+          "description": {
+            "$ref": "#/components/schemas/description"
+          },
+          "solution": {
+            "$ref": "#/components/schemas/solution"
+          },
+          "link": {
+            "$ref": "#/components/schemas/link"
+          },
+          "technologyId": {
+            "$ref": "#/components/schemas/technologyId"
+          },
+          "userId": {
+            "$ref": "#/components/schemas/id"
+          },
+          "_id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2022-10-06T14:49:43.400Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2022-10-06T14:49:43.400Z"
+          },
+          "__v": {
+            "type": "number",
+            "example": 0
+          }
+        }
+      },
+      "CategoryCreatedResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Back-End"
+          },
+          "_id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2022-10-06T14:49:43.400Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2022-10-06T14:49:43.400Z"
+          },
+          "__v": {
+            "type": "number",
+            "example": 0
+          }
+        }
+      },
+      "technologyCreatedResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Node JS"
+          },
+          "categoryId": {
+            "type": "string",
+            "example": "63403e77ee95ac6fdec0375b"
+          },
+          "_id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2022-10-06T14:49:43.400Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2022-10-06T14:49:43.400Z"
+          },
+          "__v": {
+            "type": "number",
+            "example": 0
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "code": {
+            "type": "number"
+          },
+          "error": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "documentation": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
